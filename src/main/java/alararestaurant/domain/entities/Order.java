@@ -35,7 +35,7 @@ public class Order extends BaseEntity {
 
 
     @Enumerated(EnumType.STRING)
-    @Column (columnDefinition = "ENUM('ForHere','ToGo')")
+    @Column (name="order_type",columnDefinition = "ENUM('ForHere','ToGo')default 'ForHere'" )
     public OrderType getOrderType() {
         return this.orderType;
     }

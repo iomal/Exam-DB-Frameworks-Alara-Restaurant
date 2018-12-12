@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
-public class ItemImportDto implements IHaveCustomMappings {
+public class ItemImportDto  {
     @Expose
     @Size(min = 3, max = 30)
     @Column(nullable = false, unique = true)
@@ -52,12 +52,4 @@ public class ItemImportDto implements IHaveCustomMappings {
         this.category = category;
     }
 
-    @Override
-    public void configureMappings(ModelMapper mapper) {
-        mapper.createTypeMap(ItemImportDto.class, Item.class)
-                .addMappings(m -> m.skip(Item::setCategory))
-                .addMappings(m -> m.skip(Item::setOrderItems))
-                .addMappings(m -> m.skip(Item::setId));
-        ;
-    }
 }

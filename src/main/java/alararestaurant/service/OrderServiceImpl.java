@@ -31,7 +31,6 @@ public class OrderServiceImpl implements OrderService {
     private final JaxbParser jaxbParser;
     private final EmployeeRepository employeeRepository;
     private final ItemRepository itemRepository;
-    private final OrderItemRepository orderItemRepository;
 
     public OrderServiceImpl(OrderRepository orderRepository, FileUtil fileUtil,
                             ValidationUtil validator, ModelMapper mapper, JaxbParser jaxbParser,
@@ -44,7 +43,6 @@ public class OrderServiceImpl implements OrderService {
         this.jaxbParser = jaxbParser;
         this.employeeRepository = employeeRepository;
         this.itemRepository = itemRepository;
-        this.orderItemRepository = orderItemRepository;
     }
 
     @Override
@@ -71,33 +69,22 @@ public class OrderServiceImpl implements OrderService {
             }
             Employee employee = this.employeeRepository.findByName(orderImportDto.getEmployeeName()).orElse(null);
             if (employee == null) {
-                importResult.append(Constants.INVALID_DATA_IMPORT)
-                        .append(System.lineSeparator());
                 continue;
             }
-            Set<OrderItem> items = new HashSet<>();
             Order order = mapper.map(orderImportDto, Order.class);
-            orderImportDto.getOrderItemRootImportDto().getItemImportDtos().stream().forEach(itemName ->
+            orderImportDto.getOrderItemRootImportDto().getItemImportDtos().forEach(itemName ->
             {
                 Item item = this.itemRepository.findByName(itemName.getName()).orElse(null);
-                if (item == null) {
-                    importResult.append(Constants.INVALID_DATA_IMPORT)
-                            .append(System.lineSeparator());
-                    return;
-                } else {
-
+                if (item != null) {
                     order.addOrderItem(new OrderItem(item, itemName.getQuantity()));
                     order.setEmployee(employee);
                     this.orderRepository.save(order);
                 }
-
             });
-
 
             importResult.append(String.format(Constants.SUCCESSFUL_ORDER_IMPORT, orderImportDto.getCustomer(),
                     orderImportDto.getDateTime()))
                     .append(System.lineSeparator());
-
         }
         return importResult.toString().trim();
     }

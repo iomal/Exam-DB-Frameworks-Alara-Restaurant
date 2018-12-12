@@ -47,32 +47,31 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public String importEmployees(String employees) {
-        EmployeeImportDto[] importDtos=gson.fromString(employees,EmployeeImportDto[].class);
-        StringBuilder importResult=new StringBuilder();
+        EmployeeImportDto[] importDtos = gson.fromString(employees, EmployeeImportDto[].class);
+        StringBuilder importResult = new StringBuilder();
         for (EmployeeImportDto importDto : importDtos) {
-            if(!validator.isValid(importDto)){
-                importResult.append(Constants.INVALID_DATA_IMPORT)
-                .append(System.lineSeparator());
-                continue;
-            }
-            Position position =this.positionRepository.findByName(importDto.getPosition()).orElse(null);
-            if (position==null)
-            { position = new Position(importDto.getPosition());
-                if(!validator.isValid(position))
-            {
+            if (!validator.isValid(importDto)) {
                 importResult.append(Constants.INVALID_DATA_IMPORT)
                         .append(System.lineSeparator());
                 continue;
             }
+            Position position = this.positionRepository.findByName(importDto.getPosition()).orElse(null);
+            if (position == null) {
+                position = new Position(importDto.getPosition());
+                if (!validator.isValid(position)) {
+                    importResult.append(Constants.INVALID_DATA_IMPORT)
+                            .append(System.lineSeparator());
+                    continue;
+                }
 
                 position = new Position(importDto.getPosition());
-                this.positionRepository.save(position);
+
             }
             Employee employee = mapper.map(importDto, Employee.class);
             employee.setPosition(position);
-            this.employeeRepository.saveAndFlush(employee);
-            importResult.append(String.format(Constants.SUCCESSFUL_IMPORT,importDto.getName()))
-            .append(System.lineSeparator());
+            this.employeeRepository.save(employee);
+            importResult.append(String.format(Constants.SUCCESSFUL_IMPORT, importDto.getName()))
+                    .append(System.lineSeparator());
         }
         return importResult.toString();
     }

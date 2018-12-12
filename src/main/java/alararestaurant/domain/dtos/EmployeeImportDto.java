@@ -10,7 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class EmployeeImportDto implements IHaveCustomMappings{
+public class EmployeeImportDto{
 
     @Expose
     @Size(min = 3, max = 30)
@@ -23,6 +23,7 @@ public class EmployeeImportDto implements IHaveCustomMappings{
     private Integer age;
     @Expose
     @NotNull
+    @Size(min = 3, max = 30)
     private String position;
 
     public EmployeeImportDto() {
@@ -52,11 +53,4 @@ public class EmployeeImportDto implements IHaveCustomMappings{
         this.position = position;
     }
 
-    @Override
-    public void configureMappings(ModelMapper mapper) {
-        mapper.createTypeMap(EmployeeImportDto.class,Employee.class)
-                .addMappings(m->m.skip(Employee::setOrders))
-        .addMappings(m->m.skip(Employee::setPosition))
-        .addMappings(m->m.skip(Employee::setId));
-    }
 }

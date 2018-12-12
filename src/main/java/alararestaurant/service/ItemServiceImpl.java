@@ -62,15 +62,16 @@ public class ItemServiceImpl implements ItemService {
             }
             item = mapper.map(itemImportDto, Item.class);
             Category category = this.categoryRepository.findByName(itemImportDto.getCategory()).orElse(null);
-            if(category==null){
+            if (category == null) {
                 category = new Category(itemImportDto.getCategory());
-            if (!validator.isValid(category)) {
-                importResult.append(Constants.INVALID_DATA_IMPORT)
-                        .append(System.lineSeparator());
-                continue;
+                if (!validator.isValid(category)) {
+                    importResult.append(Constants.INVALID_DATA_IMPORT)
+                            .append(System.lineSeparator());
+                    continue;
+                }
+                this.categoryRepository.save(category);
             }
-            this.categoryRepository.save(category);}
-                    item.setCategory(category);
+            item.setCategory(category);
             this.itemRepository.saveAndFlush(item);
             importResult.append(String.format(Constants.SUCCESSFUL_IMPORT, item.getName()))
                     .append(System.lineSeparator());

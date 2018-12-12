@@ -8,6 +8,8 @@ import alararestaurant.mappings.IHaveCustomMappings;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -32,19 +34,20 @@ public class OrderImportDto implements IHaveCustomMappings {
 
     public OrderImportDto() {
     }
-
+    @NotNull
     public String getCustomer() {
         return this.customer;
     }
-
+    @NotNull
+    @Size(min = 3, max = 30)
     public String getEmployeeName() {
         return this.employeeName;
     }
-
+    @NotNull
     public String getOrderType() {
         return this.orderType;
     }
-
+    @NotNull
     public String getDateTime() {
         return this.dateTime;
     }
