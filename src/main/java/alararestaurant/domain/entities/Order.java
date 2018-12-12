@@ -1,5 +1,7 @@
 package alararestaurant.domain.entities;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -7,7 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Entity(name = "order")
+@Entity
 @Table(name = "orders")
 public class Order extends BaseEntity {
     private String customer;
@@ -19,7 +21,7 @@ public class Order extends BaseEntity {
     public Order() {
     }
 
-    @Column(length = 10485760)
+    @Column(columnDefinition = "TEXT")
     @NotNull
     public String getCustomer() {
         return this.customer;
@@ -30,7 +32,10 @@ public class Order extends BaseEntity {
         return this.dateTime;
     }
 
+
+
     @Enumerated(EnumType.STRING)
+    @Column (columnDefinition = "ENUM('ForHere','ToGo')")
     public OrderType getOrderType() {
         return this.orderType;
     }

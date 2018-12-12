@@ -20,7 +20,6 @@ public class Category extends BaseEntity {
         this.name = name;
     }
 
-    @Size(min = 3, max = 30)
     @Column(nullable = false, unique = true)
     public String getName() {
         return this.name;

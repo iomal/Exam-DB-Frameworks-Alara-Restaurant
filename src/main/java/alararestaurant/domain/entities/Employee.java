@@ -8,15 +8,14 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 
-@Entity(name="employee")
-@Table(name="employees")
-public class Employee extends BaseEntity{
+@Entity
+@Table(name = "employees")
+public class Employee extends BaseEntity {
 
     private String name;
     private Integer age;
     private Position position;
     private Set<Order> orders;
-
 
 
     public Employee() {
@@ -28,20 +27,18 @@ public class Employee extends BaseEntity{
         return this.name;
     }
 
-    @Min(15)
-    @Max(80)
     @NotNull
     public Integer getAge() {
         return this.age;
     }
 
     @NotNull
-    @ManyToOne(targetEntity = Position.class, cascade = {CascadeType.MERGE,CascadeType.MERGE})
+    @ManyToOne(targetEntity = Position.class, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     public Position getPosition() {
         return this.position;
     }
 
-    @OneToMany(mappedBy = "employee",targetEntity = Order.class,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "employee", targetEntity = Order.class, fetch = FetchType.LAZY)
     public Set<Order> getOrders() {
         return this.orders;
     }
@@ -64,11 +61,14 @@ public class Employee extends BaseEntity{
 
     @Override
     public String toString() {
-        StringBuilder ordersStringBuilder=new StringBuilder();
-        if (orders.size()!=0)
-        {orders.forEach(o-> {ordersStringBuilder.append("\nCustomer: "+o.getCustomer());
-        o.getOrderItems().forEach(oI->ordersStringBuilder.append(oI.toString()));});}
-        return  "\n"+"Name: " + name + '\n' +
+        StringBuilder ordersStringBuilder = new StringBuilder();
+        if (orders.size() != 0) {
+            orders.forEach(o -> {
+                ordersStringBuilder.append("\nCustomer: " + o.getCustomer());
+                o.getOrderItems().forEach(oI -> ordersStringBuilder.append(oI.toString()));
+            });
+        }
+        return "\n" + "Name: " + name + '\n' +
                 "Orders:" + ordersStringBuilder.toString();
     }
 }
